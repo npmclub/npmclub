@@ -1,5 +1,15 @@
-distribution
 node_modules
+.DS_Store
+Desktop.ini
+._*
+Thumbs.db
+*.tmp
+*.bak
+*.log
+logs
 *.map
+index.js
+index.d.ts
+dist
 .parcel-cache
-LocalOverrides.xcconfig
+demo/package-lock.json

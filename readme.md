@@ -1,46 +1,116 @@
-# <img src="assets/icon.svg" width="45" align="left"> npmhub
+# npmclub-permission-toggle [![npm version](https://img.shields.io/npm/v/webext-permission-toggle.svg)](https://www.npmjs.com/package/webext-permission-toggle)
 
-<!-- HTML tags used so the description can be copy-pasted onto Mozilla Addons -->
+<img width="375" alt="Context menu" src="https://github.com/user-attachments/assets/b7d872a5-40a5-412f-9009-44de689c87ae" align="right">
 
-On every GitHub repository or folder with a <code>package.json</code> file, scroll to the bottom of the page to see a list of its npm dependencies and their descriptions.
+> WebExtension module: Browser-action context menu to request permission for the current tab.
 
-npmhub also adds convenient links to:
+- Browsers: Chrome, Firefox, and Safari
+- Manifest: v2 and v3
 
-<ul>
-	<li>the <b>package.json</b> file
-	<li><b>npmjs.com</b>
-	<li><b>RunKit</b> to test the package
-	<li><b>BundlePhobia</b> to see the package size when bundled
-	<li><b>PackagePhobia</b> to see the package size when installed
-	<li><b>NPMGraph</b> to explore the sub-dependencies
-	<li><b>UNPKG</b> to see the exact contents published to npm
-</ul>
-
-GitHub Enterprise is also supported, see the [guide](https://fregante.github.io/webext-permission-toggle/?name=npmhub&icon=https%3A%2F%2Fraw.githubusercontent.com%2Fnpmhub%2Fnpmhub%2Fmain%2Fassets%2Ficon.svg).
-
-## Installation
-
-[link-chrome]: https://chrome.google.com/webstore/detail/npmhub/kbbbjimdjbjclaebffknlabpogocablj 'Version published on Chrome Web Store'
-[link-firefox]: https://addons.mozilla.org/en-US/firefox/addon/npm-hub/ 'Version published on Mozilla Add-ons'
-[link-safari]: https://apps.apple.com/app/npmhub/id1542090429 'Version published on the Mac App Store'
+_This package was recently renamed from `webext-domain-permission-toggle` to `webext-permission-toggle`_
 
 
-[<img src="https://raw.githubusercontent.com/alrra/browser-logos/90fdf03c/src/chrome/chrome.svg" width="48" alt="Chrome" valign="middle">][link-chrome] [<img valign="middle" src="https://img.shields.io/chrome-web-store/v/kbbbjimdjbjclaebffknlabpogocablj?label=%20">][link-chrome] and other Chromium browsers
 
-[<img src="https://raw.githubusercontent.com/alrra/browser-logos/90fdf03c/src/firefox/firefox.svg" width="48" alt="Firefox" valign="middle">][link-firefox] [<img valign="middle" src="https://img.shields.io/amo/v/npm-hub.svg?label=%20">][link-firefox] including Firefox Android
+## Install
 
-[<img src="https://raw.githubusercontent.com/alrra/browser-logos/90fdf03c/src/safari/safari_128x128.png" width="48" alt="Safari" valign="middle">][link-safari] [<img valign="middle" src="https://img.shields.io/itunes/v/1542090429?label=%20">][link-safari] on Mac, iOS and iPadOS
 
-[<img src="https://raw.githubusercontent.com/iamcal/emoji-data/08ec822c38e0b7a6fea0b92a9c42e02b6ba24a84/img-apple-160/1f99a.png" width="48" valign="middle">](https://github.com/sponsors/fregante) _If you love npmhub, consider [sponsoring or hiring](https://github.com/sponsors/fregante) the maintainer [@fregante](https://twitter.com/fregante)_
+use `npm`:
 
-## Design
+```sh
+npm install webext-permission-toggle
+```
 
-Here's what npmhub looks like:
+```js
+import addPermissionToggle from 'webext-permission-toggle';
+```
 
-![npmhub on Chrome](assets/Chrome/window.png)
+## Usage
 
-## See Also
+```js
+// In background.js
+addPermissionToggle();
+```
 
-- [GhostText](https://github.com/fregante/GhostText) - An extension to use your text editor to write in your browser. Everything you type in the editor will be instantly updated in the browser (and vice versa).
-- [packagehub](https://github.com/BrainMaestro/packagehub) - An extension for displaying dependencies for different package managers on GitHub.
-- [ghub.io](http://ghub.io) - A URL shortener to jump straight to the GitHub repo of an npm package, e.g. [ghub.io/express](http://ghub.io/express).
+### manifest.json v3
+
+```js
+// example background.worker.js
+navigator.importScripts(
+	"webext-permission-toggle.js"
+)
+```
+```js
+{
+	"version": 3,
+	"action": { /* Firefox support */
+		"default_icon": "icon.png"
+	},
+	"permissions": [
+		"contextMenus",
+		"activeTab",
+		"scripting",
+	],
+	"optional_host_permissions": [
+		"*://*/*"
+	],
+	"background": {
+		"service_worker": "background.worker.js"
+	}
+}
+```
+
+### manifest.json v2
+
+```js
+{
+	"version": 2,
+	"browser_action": { /* Firefox support */
+		"default_icon": "icon.png"
+	},
+	"permissions": [
+		"contextMenus",
+		"activeTab"
+	],
+	"optional_permissions": [
+		"*://*/*"
+	],
+	"background": {
+		"scripts": [
+			"webext-permission-toggle.js",
+			"background.js"
+		]
+	}
+}
+```
+
+## API
+
+### addPermissionToggle([options])
+
+<img width="331" alt="Context menu" src="https://user-images.githubusercontent.com/1402241/32874388-e0c64150-cacc-11e7-9a50-eae3727fd3c2.png" align="right">
+
+Adds an item to the browser action icon's context menu (as shown in the screenshot).
+
+The user can access this menu by right clicking the icon. If your extension doesn't have any action or popup assigned to the icon, it will also appear with a left click.
+
+#### options
+
+##### title
+
+Type: `string`
+
+Default: `'Enable ${extensionName} on this domain'`
+
+The title of the action in the context menu.
+
+##### reloadOnSuccess
+
+<img align="right" alt="Reload confirmation message" width="332" src="https://user-images.githubusercontent.com/1402241/32890310-2e503192-cb09-11e7-863c-a96df2bf838c.png">
+
+Type: `boolean` `string`
+
+Default: `false`
+
+If `true` or `string`, when the user accepts the new permission, they will be asked to reload the current tab. Set a `string` to customize the message or `true` use the default message: `Do you want to reload this page to apply ${extensionName}?`
+
+

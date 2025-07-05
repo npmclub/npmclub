@@ -1,65 +1,95 @@
 {
-  "private": true,
-  "license": "MIT",
-  "author": "zeke",
-  "scripts": {
-    "build": "parcel build --no-cache",
-    "fix": "npm run lint -- --fix",
-    "lint": "eslint source --ext .svelte,.js",
-    "pack:safari": "xcodebuild -project 'safari/npmhub.xcodeproj' -scheme 'npmhub (macOS)'",
-    "prepare:safari": "bash safari/prepare-release.sh",
-    "test": "npm run lint && npm run build",
-    "watch": "parcel watch --no-cache --no-hmr"
-  },
-  "dependencies": {
-    "github-injection": "^1.1.0",
-    "hosted-git-info": "^7.0.2",
-    "memoize": "^10.0.0",
-    "webext-dynamic-content-scripts": "^10.0.4",
-    "webext-permission-toggle": "^5.1.0"
-  },
-  "devDependencies": {
-    "@gatsbyjs/parcel-namer-relative-to-cwd": "^2.13.1",
-    "@parcel/config-webextension": "^2.12.1-canary.3311",
-    "@parcel/optimizer-terser": "^2.12.0",
-    "@parcel/transformer-image": "^2.12.0",
-    "eslint": "^8.57.0",
-    "eslint-config-xo-space": "^0.35.0",
-    "eslint-plugin-svelte": "^2.43.0",
-    "eslint-plugin-unicorn": "^54.0.0",
-    "parcel": "^2.0.0-canary.1686",
-    "parcel-reporter-clean-dist": "^1.0.4",
-    "parcel-transformer-svelte-v4": "^1.2.3",
-    "process": "^0.11.10",
-    "svelte": "^4.2.18"
-  },
-  "engines": {
-    "node": ">=22"
-  },
-  "@parcel/resolver-default": {
-    "packageExports": true
-  },
-  "alias": {
-    "url": "./source/lib/reduced-url.js"
-  },
-  "targets": {
-    "main": false,
-    "default": {
-      "engines": {
-        "browsers": "Chrome 121"
-      },
-      "scopeHoist": false,
-      "source": "manifest.json",
-      "distDir": "./distribution",
-      "sourceMap": false
-    }
-  },
-  "webExt": {
-    "sourceDir": "distribution",
-    "run": {
-      "startUrl": [
-        "https://github.com/npmhub/npmhub"
-      ]
-    }
-  }
+	"name": "webext-permission-toggle",
+	"version": "6.0.1",
+	"description": "Browser-action context menu to request permission for the current tab. Chrome, Firefox, Safari.",
+	"keywords": [
+		"browser",
+		"chrome",
+		"safari",
+		"extension",
+		"dynamic",
+		"register",
+		"firefox",
+		"permission",
+		"ui",
+		"webextension"
+	],
+	"repository": "fregante/webext-permission-toggle",
+	"funding": "https://github.com/sponsors/fregante",
+	"license": "MIT",
+	"author": "Federico Brigante <me@fregante.com> (https://fregante.com)",
+	"type": "module",
+	"exports": "./index.js",
+	"types": "./index.d.ts",
+	"files": [
+		"index.js",
+		"index.d.ts"
+	],
+	"scripts": {
+		"build": "tsc",
+		"demo:build": "parcel build --no-cache",
+		"demo:watch": "parcel watch --no-cache --no-hmr",
+		"docs:watch": "cd docs && npx browser-sync start --server --watch",
+		"prepack": "tsc --sourceMap false",
+		"test": "xo && tsc --noEmit",
+		"watch": "tsc --watch"
+	},
+	"xo": {
+		"envs": [
+			"browser",
+			"webextensions"
+		],
+		"rules": {
+			"no-alert": "off",
+			"n/no-unsupported-features/node-builtins": "off"
+		}
+	},
+	"dependencies": {
+		"webext-alert": "^1.0.3",
+		"webext-content-scripts": "^2.7.2",
+		"webext-detect": "^5.3.2",
+		"webext-patterns": "^1.5.0",
+		"webext-permissions": "^3.1.4",
+		"webext-polyfill-kinda": "^1.0.2",
+		"webext-tools": "^3.0.0"
+	},
+	"devDependencies": {
+		"@parcel/config-webextension": "^2.13.3",
+		"@parcel/transformer-webextension": "^2.13.3",
+		"@sindresorhus/tsconfig": "^7.0.0",
+		"@types/chrome": "^0.0.299",
+		"parcel": "^2.13.3",
+		"typescript": "^5.7.3",
+		"xo": "^0.60.0"
+	},
+	"engines": {
+		"node": ">=16"
+	},
+	"@parcel/resolver-default": {
+		"packageExports": true
+	},
+	"targets": {
+		"main": false,
+		"mv2": {
+			"engines": {
+				"browsers": "last 2 Chrome versions"
+			},
+			"source": "demo/mv2/manifest.json",
+			"sourceMap": {
+				"inline": true
+			}
+		},
+		"mv3": {
+			"engines": {
+				"browsers": "last 2 Chrome versions"
+			},
+			"source": "demo/mv3/manifest.json",
+			"sourceMap": {
+				"inline": true
+			}
+		}
+	},
+	"webExt": {
+		"sourceDir": "dist/mv3"
+	}
 }
