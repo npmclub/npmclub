@@ -1,3 +1,17 @@
 {
-	"extends": "@parcel/config-webextension"
+	"extends": "@parcel/config-webextension",
+	"transformers": {
+		"*.svelte": ["parcel-transformer-svelte-v4"]
+	},
+	"namers": [
+		"@gatsbyjs/parcel-namer-relative-to-cwd",
+		"..."
+	],
+	"reporters": [
+		"...",
+		"parcel-reporter-clean-dist"
+	],
+	"optimizers": {
+		"*.js": ["@parcel/optimizer-terser"]
+	}
 }

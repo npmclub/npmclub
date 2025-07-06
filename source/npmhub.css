@@ -1,0 +1,36 @@
+.npmhub-deps {
+  list-style: none;
+  padding: 0 !important;
+}
+.npmhub-deps > li {
+  padding: 10px;
+  border-bottom: 1px solid var(--borderColor-muted, #ddd);
+}
+.npmhub-deps > li:last-child {
+  border-bottom: none;
+}
+li.npmhub-empty {
+  opacity: 0.6;
+}
+.npmhub-deps em {
+  color: darkgray;
+}
+.npmhub-header {
+  float: right;
+  margin-right: 3px;
+}
+.npmhub-header .btn {
+  position: relative;
+  margin: 3px 0;
+}
+.npmhub-deps:empty:before {
+  display: block;
+  content: 'loading';
+  padding: 10px;
+  animation: npmhub-pulse 1s infinite;
+}
+@keyframes npmhub-pulse {
+  50% {
+    opacity: 0.5;
+  }
+}
